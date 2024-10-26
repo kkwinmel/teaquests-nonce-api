@@ -5,21 +5,21 @@ export default async function handler(req, res) {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
-      }
+      },
+      credentials: 'include'  // 加入呢行
     });
     
-    // 改用細楷 'nonce'
+    // 儲存返 cookie
+    const cookies = response.headers.get('set-cookie');
+    
     const headers = Object.fromEntries(response.headers);
     const nonce = headers['nonce'];
     
-    if (!nonce) {
-      return res.status(400).json({ 
-        error: 'Nonce not found',
-        headers: headers 
-      });
-    }
-    
-    res.status(200).json({ nonce });
+    // 將 cookie 同 nonce 一齊返回
+    res.status(200).json({ 
+      nonce,
+      cookies 
+    });
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ error: error.message });
