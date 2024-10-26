@@ -1,6 +1,6 @@
 export default async function handler(req, res) {
   try {
-    // 打印 environment variables 嚟確認有冇讀到
+    // Log environment variables to verify successful retrieval
     console.log('Checking env vars:', {
       hasConsumerKey: !!process.env.CONSUMER_KEY,
       hasConsumerSecret: !!process.env.CONSUMER_SECRET
