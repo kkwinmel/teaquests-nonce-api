@@ -5,5 +5,11 @@
       "src": "/api/getNonce",
       "dest": "/api/getNonce.js"
     }
-  ]
+  ],
+  "functions": {
+    "api/getNonce.js": {
+      "memory": 1024,
+      "maxDuration": 10
+    }
+  }
 }
