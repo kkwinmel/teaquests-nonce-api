@@ -1,6 +1,6 @@
 export default async function handler(req, res) {
   try {
-    const response = await fetch('https://teaquests.com/wp-json/wc/store/v1/cart', {
+    const response = await fetch('https://teaquests.com/wp-json/wc/store/v1/cart?consumer_key=ck_faf6e983fe22bdbf14cef66483891058dcaf17c0&consumer_secret=cs_f41ecc320c623f095ef2da62e2af83f353359136', {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
