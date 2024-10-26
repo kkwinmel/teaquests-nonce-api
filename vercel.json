@@ -1,15 +1,8 @@
 {
   "version": 2,
-  "routes": [
-    {
-      "src": "/api/getNonce",
-      "dest": "/api/getNonce.js"
-    }
-  ],
   "functions": {
-    "api/getNonce.js": {
-      "memory": 1024,
-      "maxDuration": 10
+    "api/*.js": {
+      "runtime": "nodejs18.x"
     }
   }
 }
