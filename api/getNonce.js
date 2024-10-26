@@ -8,12 +8,9 @@ export default async function handler(req, res) {
       }
     });
     
-    // 打印所有 headers 嚟睇下
+    // 改用細楷 'nonce'
     const headers = Object.fromEntries(response.headers);
-    console.log('Response headers:', headers);
-    
-    const nonce = response.headers.get('x-wc-store-api-nonce');
-    console.log('Nonce value:', nonce);
+    const nonce = headers['nonce'];
     
     if (!nonce) {
       return res.status(400).json({ 
