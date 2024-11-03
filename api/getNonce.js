@@ -1,10 +1,10 @@
 export default async function handler(req, res) {
   try {
-    // 先建立WooCommerce session
-    const initSession = await fetch(
+    // 首先建立WooCommerce session
+    const sessionResponse = await fetch(
       `https://teaquests.com/wp-json/wc/store/v1/cart/items`, 
       {
-        method: 'POST',
+        method: 'GET',  // 改用GET先建立session
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
@@ -14,8 +14,11 @@ export default async function handler(req, res) {
       }
     );
 
-    // 然後再攞nonce
-    const response = await fetch(
+    // 等session建立好先，攞返session cookie
+    const sessionCookie = sessionResponse.headers.get('set-cookie');
+
+    // 用新session再攞nonce
+    const nonceResponse = await fetch(
       `https://teaquests.com/wp-json/wc/store/v1/cart?consumer_key=${process.env.CONSUMER_KEY}&consumer_secret=${process.env.CONSUMER_SECRET}`, 
       {
         method: 'GET',
@@ -23,25 +26,19 @@ export default async function handler(req, res) {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
           'User-Agent': req.headers['user-agent'] || 'unknown-device',
-          'Cookie': initSession.headers.get('set-cookie') // 用返新session嘅cookie
-        },
-        credentials: 'include'
+          'Cookie': sessionCookie  // 用返新session嘅cookie
+        }
       }
     );
     
-    const cookies = response.headers.get('set-cookie');
-    const headers = Object.fromEntries(response.headers);
-    const nonce = headers['nonce'];
+    const nonce = nonceResponse.headers['nonce'];
     
     res.status(200).json({ 
       nonce,
-      cookies,
-      deviceId: req.headers['user-agent'] || 'unknown-device'
+      cookies: sessionCookie
     });
   } catch (error) {
     console.error('Error:', error);
-    res.status(500).json({ 
-      error: error.message
-    });
+    res.status(500).json({ error: error.message });
   }
 }
