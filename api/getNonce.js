@@ -5,7 +5,7 @@ export default async function handler(req, res) {
       hasConsumerSecret: !!process.env.CONSUMER_SECRET
     });
 
-    // 叫新嘅endpoint
+    // 改用新嘅endpoint路徑
     const response = await fetch(
       `https://teaquests.com/wp-json/wc/v3/get-unique-nonce?consumer_key=${process.env.CONSUMER_KEY}&consumer_secret=${process.env.CONSUMER_SECRET}`, 
       {
@@ -19,6 +19,11 @@ export default async function handler(req, res) {
     );
     
     const data = await response.json();
+    
+    // 確保有返response data
+    if (!data || !data.nonce) {
+      throw new Error('Invalid response from WordPress');
+    }
     
     res.status(200).json({ 
       nonce: data.nonce,
